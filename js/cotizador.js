@@ -69,25 +69,22 @@ function calcular() {
   document.getElementById('lblTotal').innerText = `${sim} ${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${isoMoneda}`;
 }
 
-function prepararLogoBase64() {
+function cargarLogoEnPdf() {
   return new Promise((resolve) => {
     const headerLogo = document.getElementById('header-logo');
     const pdfLogo = document.getElementById('pdf-logo');
-    if (!headerLogo || !headerLogo.complete || headerLogo.naturalWidth === 0) {
-      if (pdfLogo) pdfLogo.style.display = 'none';
-      resolve();
-      return;
-    }
-    try {
-      const canvas = document.createElement('canvas');
-      canvas.width = headerLogo.naturalWidth;
-      canvas.height = headerLogo.naturalHeight;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(headerLogo, 0, 0);
-      pdfLogo.src = canvas.toDataURL('image/png');
-      pdfLogo.style.display = 'block';
-    } catch (e) {
-      // Si el navegador bloquea canvas por origen, mantiene el src original
+    
+    if (headerLogo && headerLogo.complete && headerLogo.naturalWidth > 0) {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = headerLogo.naturalWidth;
+        canvas.height = headerLogo.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(headerLogo, 0, 0);
+        pdfLogo.src = canvas.toDataURL('image/png');
+      } catch (e) {
+        pdfLogo.src = headerLogo.src;
+      }
     }
     resolve();
   });
@@ -159,7 +156,6 @@ async function generarPDF() {
   document.getElementById('pdf-subtotal-item').innerText = `${sim} ${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   document.getElementById('pdf-subtotal').innerText = `${sim} ${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })} ${isoMoneda}`;
 
-  // Mostrar u ocultar fila de IVA en el PDF según si aplica
   const filaIva = document.getElementById('pdf-fila-iva');
   if (ivaPct > 0) {
     filaIva.style.display = 'flex';
@@ -173,20 +169,19 @@ async function generarPDF() {
   document.getElementById('pdf-tiempo').innerText = tiempo;
   document.getElementById('pdf-validez').innerText = validez;
 
-  await prepararLogoBase64();
+  await cargarLogoEnPdf();
 
   const element = document.getElementById('pdf-template');
   const fileName = `Cotizacion_${cliente.replace(/[^a-zA-Z0-9_-]/g, '_')}_${fechaStr.replace(/\//g, '-')}.pdf`;
 
   const opt = {
-    margin: 10,
+    margin: [10, 10, 10, 10],
     filename: fileName,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: {
       scale: 2,
-      scrollX: 0,
-      scrollY: 0,
-      windowWidth: 800
+      useCORS: true,
+      logging: false
     },
     jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }
   };
@@ -204,7 +199,6 @@ async function generarPDF() {
         text: `Cotización de Pinturas y Servicios - ${cliente}`
       });
     } else if (isMobile) {
-      // Descarga compatible con Android WebView (APK)
       const dataUri = pdf.output('datauristring');
       const link = document.createElement('a');
       link.href = dataUri;
@@ -218,7 +212,7 @@ async function generarPDF() {
   } catch (err) {
     if (err && err.name !== 'AbortError') {
       console.error(err);
-      alert("No se pudo exportar el PDF: " + err.message);
+      alert("Error al exportar PDF: " + err.message);
     }
   } finally {
     btn.disabled = false;
