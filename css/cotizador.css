@@ -131,7 +131,7 @@ textarea {
   background-color: #ffffff !important;
   color: #000000 !important;
   font-size: 0.95rem !important;
-  font-weight: 500 !important;
+  font-weight: 400 !important;
   padding: 10px 12px;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
@@ -212,13 +212,17 @@ textarea {
   background: #15803d;
 }
 
-/* Plantilla PDF Impresión */
+.btn-submit:disabled {
+  background: #475569;
+  cursor: wait;
+}
+
+/* Plantilla PDF */
 #pdf-template {
-  display: none;
   background: #ffffff;
   color: #0f172a;
-  padding: 30px;
-  width: 780px;
+  padding: 28px;
+  width: 760px;
   font-size: 13px;
   line-height: 1.4;
 }
@@ -233,8 +237,9 @@ textarea {
 }
 
 .pdf-header img {
-  width: 70px;
-  height: 70px;
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
 }
 
 .pdf-info-box {
@@ -270,7 +275,7 @@ textarea {
 
 .pdf-totals {
   margin-left: auto;
-  width: 260px;
+  width: 270px;
   margin-bottom: 20px;
 }
 
@@ -292,6 +297,6 @@ textarea {
 .pdf-signatures {
   display: flex;
   justify-content: space-between;
-  margin-top: 40px;
+  margin-top: 35px;
   text-align: center;
 }

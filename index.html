@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cotizador Web - Pinturas y Servicios</title>
 
-  <!-- Hojas de Estilos y Librerías -->
   <link rel="stylesheet" href="css/cotizador.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
@@ -13,7 +12,7 @@
 
   <div class="app-container">
     <header class="header">
-      <img src="static/logo.png" alt="Logo Pinturas y Servicios" onerror="this.style.display='none'">
+      <img src="static/logo.png" alt="Logo Pinturas y Servicios" id="header-logo" onerror="this.style.display='none'">
       <div class="header-text">
         <h1>PINTURAS Y SERVICIOS</h1>
         <p>Calidad & Protección Industrial • Generador Móvil de Cotizaciones PDF</p>
@@ -21,12 +20,10 @@
     </header>
 
     <div class="main-grid">
-      <!-- Formulario -->
       <main class="form-panel">
         
-        <!-- Configuración Inicial -->
-        <h2 class="section-title">Configuración de Moneda</h2>
-        <div class="form-grid">
+        <h2 class="section-title">Configuración de Moneda e Impuestos</h2>
+        <div class="form-grid form-grid-3">
           <div class="form-group">
             <label>Moneda de la Cotización:</label>
             <select id="moneda" onchange="cambiarMoneda()">
@@ -34,9 +31,20 @@
               <option value="NIO">Córdobas Nicaragüenses (C$ NIO)</option>
             </select>
           </div>
+          <div class="form-group">
+            <label>Aplicación de IVA:</label>
+            <select id="iva_opcion" onchange="cambiarOpcionIva()">
+              <option value="0">Sin IVA (0%)</option>
+              <option value="15" selected>IVA Estándar (15%)</option>
+              <option value="custom">IVA Personalizado (%)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Porcentaje IVA (%):</label>
+            <input type="number" id="iva_porcentaje" value="15" min="0" max="100" step="any" disabled oninput="calcular()">
+          </div>
         </div>
 
-        <!-- Datos del Cliente -->
         <h2 class="section-title">Datos del Cliente y Proyecto</h2>
         <div class="form-grid form-grid-2">
           <div class="form-group">
@@ -57,7 +65,6 @@
           </div>
         </div>
 
-        <!-- Especificación Técnica -->
         <h2 class="section-title">Especificación Técnica del Servicio</h2>
         <div class="form-grid">
           <div class="form-group">
@@ -101,7 +108,6 @@
           </div>
         </div>
 
-        <!-- Términos Comerciales -->
         <h2 class="section-title">Términos Comerciales</h2>
         <div class="form-grid form-grid-2">
           <div class="form-group">
@@ -116,7 +122,6 @@
 
       </main>
 
-      <!-- Resumen Financiero -->
       <aside class="summary-card">
         <div>
           <h2 class="summary-title">RESUMEN FINANCIERO</h2>
@@ -125,7 +130,7 @@
             <strong id="lblSubtotal">$ 0.00 USD</strong>
           </div>
           <div class="summary-item">
-            <span style="color: var(--text-muted);">IVA (15%):</span>
+            <span id="lblIvaTexto" style="color: var(--text-muted);">IVA (15%):</span>
             <strong id="lblIva" style="color: var(--text-muted);">$ 0.00 USD</strong>
           </div>
           <div class="summary-divider"></div>
@@ -135,97 +140,98 @@
           <div class="summary-total" id="lblTotal">$ 0.00 USD</div>
         </div>
 
-        <button class="btn-submit" onclick="generarPDF()">📄 GENERAR PDF</button>
+        <button class="btn-submit" id="btnGenerarPdf" onclick="generarPDF()">📄 GENERAR PDF</button>
       </aside>
     </div>
   </div>
 
-  <!-- Plantilla Oculta para PDF -->
-  <div id="pdf-template">
-    <div class="pdf-header">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <img src="static/logo.png" alt="Logo" id="pdf-logo">
-        <div>
-          <h2 style="font-size: 18px; color: #0f172a; margin: 0;">PINTURAS Y SERVICIOS</h2>
-          <span style="font-size: 11px; color: #64748b;">Calidad & Protección Industrial</span><br>
-          <span style="font-size: 10px; color: #334155;">Managua, Nicaragua • Cobertura Nacional</span>
+  <!-- Plantilla PDF -->
+  <div id="pdf-wrapper" style="position: fixed; left: -9999px; top: 0;">
+    <div id="pdf-template">
+      <div class="pdf-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="static/logo.png" alt="Logo" id="pdf-logo" onerror="this.style.display='none'">
+          <div>
+            <h2 style="font-size: 18px; color: #0f172a; margin: 0;">PINTURAS Y SERVICIOS</h2>
+            <span style="font-size: 11px; color: #64748b;">Calidad & Protección Industrial</span><br>
+            <span style="font-size: 10px; color: #334155;">Managua, Nicaragua • Cobertura Nacional</span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <h3 style="font-size: 14px; color: #2563eb; margin: 0;">COTIZACIÓN DE SERVICIOS</h3>
+          <span style="font-size: 11px; color: #64748b;" id="pdf-fecha">Fecha: --/--/----</span><br>
+          <span style="font-size: 11px; color: #64748b;" id="pdf-codigo">Código: PyS-000</span>
         </div>
       </div>
-      <div style="text-align: right;">
-        <h3 style="font-size: 14px; color: #2563eb; margin: 0;">COTIZACIÓN DE SERVICIOS</h3>
-        <span style="font-size: 11px; color: #64748b;" id="pdf-fecha">Fecha: --/--/----</span><br>
-        <span style="font-size: 11px; color: #64748b;" id="pdf-codigo">Código: PyS-000</span>
-      </div>
-    </div>
 
-    <div class="pdf-info-box">
-      <div>
-        <strong style="color: #2563eb; font-size: 11px;">DATOS DEL CLIENTE</strong><br>
-        <strong>Cliente / Empresa:</strong> <span id="pdf-cliente">-</span><br>
-        <strong>Atención a:</strong> <span id="pdf-contacto">-</span>
+      <div class="pdf-info-box">
+        <div>
+          <strong style="color: #2563eb; font-size: 11px;">DATOS DEL CLIENTE</strong><br>
+          <strong>Cliente / Empresa:</strong> <span id="pdf-cliente">-</span><br>
+          <strong>Atención a:</strong> <span id="pdf-contacto">-</span>
+        </div>
+        <div>
+          <strong style="color: #2563eb; font-size: 11px;">UBICACIÓN Y CONTACTO</strong><br>
+          <strong>Ubicación:</strong> <span id="pdf-ubicacion">-</span><br>
+          <strong>Teléfono / Email:</strong> <span id="pdf-telefono">-</span>
+        </div>
       </div>
-      <div>
-        <strong style="color: #2563eb; font-size: 11px;">UBICACIÓN Y CONTACTO</strong><br>
-        <strong>Ubicación:</strong> <span id="pdf-ubicacion">-</span><br>
-        <strong>Teléfono / Email:</strong> <span id="pdf-telefono">-</span>
+
+      <table class="pdf-table">
+        <thead>
+          <tr>
+            <th style="width: 52%;">Descripción del Servicio & Alcance Técnico</th>
+            <th style="width: 16%; text-align: center;">Medida</th>
+            <th style="width: 16%; text-align: right;">Precio Unitario</th>
+            <th style="width: 16%; text-align: right;">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong id="pdf-servicio">-</strong><br>
+              <span id="pdf-alcance" style="color: #475569; font-size: 11px;">-</span>
+            </td>
+            <td style="text-align: center;" id="pdf-area">0.00</td>
+            <td style="text-align: right;" id="pdf-precio">$0.00</td>
+            <td style="text-align: right;" id="pdf-subtotal-item">$0.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pdf-totals">
+        <div><span>Subtotal:</span> <strong id="pdf-subtotal">$ 0.00 USD</strong></div>
+        <div id="pdf-fila-iva"><span id="pdf-iva-label">IVA (15%):</span> <strong id="pdf-iva">$ 0.00 USD</strong></div>
+        <div style="border-top: 1px solid #0f172a; padding-top: 5px; margin-top: 5px; font-size: 14px;">
+          <strong>TOTAL:</strong> <strong id="pdf-total" style="color: #0f172a;">$ 0.00 USD</strong>
+        </div>
       </div>
-    </div>
 
-    <table class="pdf-table">
-      <thead>
-        <tr>
-          <th style="width: 55%;">Descripción del Servicio & Alcance Técnico</th>
-          <th style="width: 15%; text-align: center;">Medida / Cantidad</th>
-          <th style="width: 15%; text-align: right;">Precio Unitario / Tarifario</th>
-          <th style="width: 15%; text-align: right;">Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <strong id="pdf-servicio">-</strong><br>
-            <span id="pdf-alcance" style="color: #475569; font-size: 11px;">-</span>
-          </td>
-          <td style="text-align: center;" id="pdf-area">0.00</td>
-          <td style="text-align: right;" id="pdf-precio">$0.00</td>
-          <td style="text-align: right;" id="pdf-subtotal-item">$0.00</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="pdf-totals">
-      <div><span>Subtotal:</span> <strong id="pdf-subtotal">$ 0.00 USD</strong></div>
-      <div><span>IVA (15%):</span> <strong id="pdf-iva">$ 0.00 USD</strong></div>
-      <div style="border-top: 1px solid #0f172a; padding-top: 5px; margin-top: 5px; font-size: 14px;">
-        <strong>TOTAL:</strong> <strong id="pdf-total" style="color: #0f172a;">$ 0.00 USD</strong>
+      <div class="pdf-terms">
+        <strong style="color: #2563eb;">CONDICIONES COMERCIALES Y DE GARANTÍA</strong><br>
+        • <strong>Tiempo estimado de ejecución:</strong> <span id="pdf-tiempo">A convenir</span><br>
+        • <strong>Validez de la propuesta:</strong> <span id="pdf-validez">15 días calendario</span><br>
+        • <strong>Modalidad de Pago:</strong> 50% anticipo al iniciar y 50% contra entrega a satisfacción.<br>
+        • <strong>Garantía Técnica:</strong> Respaldo integral directo en materiales y mano de obra especializados por Pinturas y Servicios.
       </div>
-    </div>
 
-    <div class="pdf-terms">
-      <strong style="color: #2563eb;">CONDICIONES COMERCIALES Y DE GARANTÍA</strong><br>
-      • <strong>Tiempo estimado de ejecución:</strong> <span id="pdf-tiempo">A convenir</span><br>
-      • <strong>Validez de la propuesta:</strong> <span id="pdf-validez">15 días calendario</span><br>
-      • <strong>Modalidad de Pago:</strong> 50% anticipo al iniciar y 50% contra entrega a satisfacción.<br>
-      • <strong>Garantía Técnica:</strong> Respaldo integral directo en materiales y mano de obra especializados por Pinturas y Servicios.
-    </div>
-
-    <div class="pdf-signatures">
-      <div>
-        ____________________________________<br>
-        <strong>PINTURAS Y SERVICIOS</strong><br>
-        Claro: (+505) 8353-4865 | Tigo: (+505) 8252-5385<br>
-        pinturasyserviciosweb@gmail.com
-      </div>
-      <div>
-        ____________________________________<br>
-        <strong>ACEPTADO POR EL CLIENTE</strong><br>
-        Firma y Sello de Conformidad<br>
-        Fecha: ____/____/________
+      <div class="pdf-signatures">
+        <div>
+          ____________________________________<br>
+          <strong>PINTURAS Y SERVICIOS</strong><br>
+          Claro: (+505) 8353-4865 | Tigo: (+505) 8252-5385<br>
+          pinturasyserviciosweb@gmail.com
+        </div>
+        <div>
+          ____________________________________<br>
+          <strong>ACEPTADO POR EL CLIENTE</strong><br>
+          Firma y Sello de Conformidad<br>
+          Fecha: ____/____/________
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Carga del Módulo Lógico -->
   <script src="js/cotizador.js"></script>
 </body>
 </html>
