@@ -2,37 +2,45 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b2a55">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Cotizador Web - Pinturas y Servicios</title>
 
+  <link rel="icon" type="image/png" href="static/icon.png">
+  <link rel="apple-touch-icon" href="static/icon.png">
   <link rel="stylesheet" href="css/cotizador.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
   <div class="app-container">
+
     <header class="header">
       <img src="static/logo.png" alt="Logo Pinturas y Servicios" id="header-logo">
       <div class="header-text">
         <h1>PINTURAS Y SERVICIOS</h1>
-        <p>Calidad & Protección Industrial • Generador Móvil de Cotizaciones PDF</p>
+        <p>Calidad &amp; Protección Industrial</p>
+        <span class="header-badge">Generador móvil de cotizaciones PDF</span>
       </div>
     </header>
 
+    <div id="aviso" class="aviso" role="alert" hidden></div>
+
     <div class="main-grid">
       <main class="form-panel">
-        
+
         <h2 class="section-title">Configuración de Moneda e Impuestos</h2>
         <div class="form-grid form-grid-3">
           <div class="form-group">
-            <label>Moneda de la Cotización:</label>
+            <label for="moneda">Moneda de la Cotización:</label>
             <select id="moneda" onchange="cambiarMoneda()">
               <option value="USD">Dólares Americanos ($ USD)</option>
               <option value="NIO">Córdobas Nicaragüenses (C$ NIO)</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Aplicación de IVA:</label>
+            <label for="iva_opcion">Aplicación de IVA:</label>
             <select id="iva_opcion" onchange="cambiarOpcionIva()">
               <option value="0">Sin IVA (0%)</option>
               <option value="15" selected>IVA Estándar (15%)</option>
@@ -40,27 +48,27 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Porcentaje IVA (%):</label>
-            <input type="number" id="iva_porcentaje" value="15" min="0" max="100" step="any" disabled oninput="calcular()">
+            <label for="iva_porcentaje">Porcentaje IVA (%):</label>
+            <input type="number" id="iva_porcentaje" value="15" min="0" max="100" step="any" inputmode="decimal" disabled oninput="calcular()">
           </div>
         </div>
 
         <h2 class="section-title">Datos del Cliente y Proyecto</h2>
         <div class="form-grid form-grid-2">
           <div class="form-group">
-            <label>Empresa / Cliente:</label>
+            <label for="cliente">Empresa / Cliente:</label>
             <input type="text" id="cliente" placeholder="Ej: Condominio Las Colinas">
           </div>
           <div class="form-group">
-            <label>Atención a:</label>
+            <label for="contacto">Atención a:</label>
             <input type="text" id="contacto" placeholder="Ej: Ing. Roberto Mendoza">
           </div>
           <div class="form-group">
-            <label>Ubicación Obra:</label>
+            <label for="ubicacion">Ubicación Obra:</label>
             <input type="text" id="ubicacion" placeholder="Ej: Managua, Nicaragua">
           </div>
           <div class="form-group">
-            <label>Teléfono / Email:</label>
+            <label for="telefono">Teléfono / Email:</label>
             <input type="text" id="telefono" placeholder="Ej: +505 8888-8888">
           </div>
         </div>
@@ -68,7 +76,7 @@
         <h2 class="section-title">Especificación Técnica del Servicio</h2>
         <div class="form-grid">
           <div class="form-group">
-            <label>Tipo de Servicio:</label>
+            <label for="servicio">Tipo de Servicio:</label>
             <select id="servicio">
               <option value="Demarcación Vial, Señalización Horizontal y Recubrimiento de Alto Tráfico para Parqueos">Demarcación Vial, Señalización Horizontal y Recubrimiento de Alto Tráfico para Parqueos</option>
               <option value="Recubrimiento Epóxico para Pisos Industriales">Recubrimiento Epóxico para Pisos Industriales</option>
@@ -82,28 +90,28 @@
 
         <div class="form-grid form-grid-3">
           <div class="form-group">
-            <label>Unidad de Medida:</label>
+            <label for="unidad_area">Unidad de Medida:</label>
             <select id="unidad_area" onchange="toggleUnidad()">
               <option value="m²">Metros cuadrados (m²)</option>
               <option value="vr²">Varas cuadradas (vr²)</option>
               <option value="km²">Kilómetros cuadrados (km²)</option>
               <option value="ft²">Pies cuadrados (ft²)</option>
-              <option value="nulo">Sin especificar / Cotización Global (Nula)</option>
+              <option value="nulo">Sin especificar / Cotización Global</option>
             </select>
           </div>
           <div class="form-group">
-            <label id="lbl-area">Cantidad / Medida:</label>
-            <input type="number" id="area" placeholder="Ej: 150" min="0" step="any" oninput="calcular()">
+            <label for="area" id="lbl-area">Cantidad / Medida:</label>
+            <input type="number" id="area" placeholder="Ej: 150" min="0" step="any" inputmode="decimal" oninput="calcular()">
           </div>
           <div class="form-group">
-            <label id="lbl-precio">Precio por m² ($):</label>
-            <input type="number" id="precio" placeholder="Ej: 12.50" min="0" step="any" oninput="calcular()">
+            <label for="precio" id="lbl-precio">Precio por m² ($):</label>
+            <input type="number" id="precio" placeholder="Ej: 12.50" min="0" step="any" inputmode="decimal" oninput="calcular()">
           </div>
         </div>
 
         <div class="form-grid">
           <div class="form-group">
-            <label>Alcance Técnico:</label>
+            <label for="alcance">Alcance Técnico:</label>
             <textarea id="alcance" placeholder="Descripción detallada de la preparación de superficie y sistema a aplicar..."></textarea>
           </div>
         </div>
@@ -111,11 +119,11 @@
         <h2 class="section-title">Términos Comerciales</h2>
         <div class="form-grid form-grid-2">
           <div class="form-group">
-            <label>Tiempo de Ejecución:</label>
+            <label for="tiempo">Tiempo de Ejecución:</label>
             <input type="text" id="tiempo" placeholder="Ej: 5 a 7 días hábiles">
           </div>
           <div class="form-group">
-            <label>Validez de la Oferta:</label>
+            <label for="validez">Validez de la Oferta:</label>
             <input type="text" id="validez" placeholder="Ej: 15 días calendario">
           </div>
         </div>
@@ -123,19 +131,19 @@
       </main>
 
       <aside class="summary-card">
-        <div>
+        <div class="summary-body">
           <h2 class="summary-title">RESUMEN FINANCIERO</h2>
           <div class="summary-item">
             <span>Subtotal:</span>
             <strong id="lblSubtotal">$ 0.00 USD</strong>
           </div>
-          <div class="summary-item">
-            <span id="lblIvaTexto" style="color: var(--text-muted);">IVA (15%):</span>
-            <strong id="lblIva" style="color: var(--text-muted);">$ 0.00 USD</strong>
+          <div class="summary-item summary-muted">
+            <span id="lblIvaTexto">IVA (15%):</span>
+            <strong id="lblIva">$ 0.00 USD</strong>
           </div>
           <div class="summary-divider"></div>
           <div class="summary-item">
-            <span style="font-weight: 600;">TOTAL ESTIMADO</span>
+            <span class="summary-total-label">TOTAL ESTIMADO</span>
           </div>
           <div class="summary-total" id="lblTotal">$ 0.00 USD</div>
         </div>
@@ -145,93 +153,9 @@
     </div>
   </div>
 
-  <!-- Contenedor PDF estructurado para impresión perfecta -->
-  <div id="pdf-render-container">
-    <div id="pdf-template">
-      <div class="pdf-header">
-        <div class="pdf-brand">
-          <img src="static/logo.png" alt="Logo" id="pdf-logo">
-          <div>
-            <h2 class="pdf-title-company">PINTURAS Y SERVICIOS</h2>
-            <span class="pdf-subtitle">Calidad & Protección Industrial</span><br>
-            <span class="pdf-location">Managua, Nicaragua • Cobertura Nacional</span>
-          </div>
-        </div>
-        <div class="pdf-doc-info">
-          <h3 class="pdf-doc-title">COTIZACIÓN DE SERVICIOS</h3>
-          <span id="pdf-fecha">Fecha: --/--/----</span><br>
-          <span id="pdf-codigo">Código: PyS-000</span>
-        </div>
-      </div>
-
-      <div class="pdf-info-box">
-        <div>
-          <strong class="pdf-box-title">DATOS DEL CLIENTE</strong><br>
-          <strong>Cliente / Empresa:</strong> <span id="pdf-cliente">-</span><br>
-          <strong>Atención a:</strong> <span id="pdf-contacto">-</span>
-        </div>
-        <div>
-          <strong class="pdf-box-title">UBICACIÓN Y CONTACTO</strong><br>
-          <strong>Ubicación:</strong> <span id="pdf-ubicacion">-</span><br>
-          <strong>Teléfono / Email:</strong> <span id="pdf-telefono">-</span>
-        </div>
-      </div>
-
-      <table class="pdf-table">
-        <thead>
-          <tr>
-            <th style="width: 50%;">Descripción del Servicio & Alcance Técnico</th>
-            <th style="width: 16%; text-align: center;">Medida</th>
-            <th style="width: 17%; text-align: right;">Precio Unitario</th>
-            <th style="width: 17%; text-align: right;">Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <strong id="pdf-servicio" style="color: #0f172a; display: block; margin-bottom: 4px;">-</strong>
-              <span id="pdf-alcance" style="color: #475569; font-size: 11px; white-space: pre-line;">-</span>
-            </td>
-            <td style="text-align: center;" id="pdf-area">0.00</td>
-            <td style="text-align: right;" id="pdf-precio">$0.00</td>
-            <td style="text-align: right;" id="pdf-subtotal-item">$0.00</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="pdf-totals">
-        <div><span>Subtotal:</span> <strong id="pdf-subtotal">$ 0.00 USD</strong></div>
-        <div id="pdf-fila-iva"><span id="pdf-iva-label">IVA (15%):</span> <strong id="pdf-iva">$ 0.00 USD</strong></div>
-        <div class="pdf-total-row">
-          <span>TOTAL:</span> <strong id="pdf-total">$ 0.00 USD</strong>
-        </div>
-      </div>
-
-      <div class="pdf-terms">
-        <strong style="color: #2563eb; display: block; margin-bottom: 5px;">CONDICIONES COMERCIALES Y DE GARANTÍA</strong>
-        • <strong>Tiempo estimado de ejecución:</strong> <span id="pdf-tiempo">A convenir</span><br>
-        • <strong>Validez de la propuesta:</strong> <span id="pdf-validez">15 días calendario</span><br>
-        • <strong>Modalidad de Pago:</strong> 50% anticipo al iniciar y 50% contra entrega a satisfacción.<br>
-        • <strong>Garantía Técnica:</strong> Respaldo integral directo en materiales y mano de obra especializados por Pinturas y Servicios.
-      </div>
-
-      <div class="pdf-signatures">
-        <div>
-          <div class="pdf-signature-line"></div>
-          <strong>PINTURAS Y SERVICIOS</strong><br>
-          Claro: (+505) 8353-4865 | Tigo: (+505) 8252-5385<br>
-          pinturasyserviciosweb@gmail.com
-        </div>
-        <div>
-          <div class="pdf-signature-line"></div>
-          <strong>ACEPTADO POR EL CLIENTE</strong><br>
-          Firma y Sello de Conformidad<br>
-          Fecha: ____/____/________
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <script src="js/logo-data.js"></script>
+  <!-- Opcional: para que el PDF funcione sin internet en el APK, descarga jspdf.umd.min.js (v2.5.1) y ponlo en js/ -->
+  <script src="js/jspdf.umd.min.js"></script>
   <script src="js/cotizador.js"></script>
 </body>
 </html>
