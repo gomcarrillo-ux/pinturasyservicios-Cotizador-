@@ -480,25 +480,19 @@ function construirPdf() {
   return { doc, d };
 }
 
-/* En el APK (WebView de Android) un enlace "blob:" llega sin tipo de archivo y se guarda
-   como .bin. Un enlace "data:application/pdf" lleva el tipo dentro, así que se guarda como .pdf. */
+/* Respaldo para celulares sin "compartir archivos": botón con un toque real del usuario.
+   No se usan enlaces "data:" porque el descargador de webintoapp se cierra con ellos. */
 function entregarPdfEnMovil(doc, fileName) {
-  const b64 = doc.output('datauristring').split('base64,')[1];
-  const uri = 'data:application/pdf;base64,' + b64;
+  const blob = new Blob([doc.output('arraybuffer')], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
 
-  // Botón de respaldo: un toque real del usuario siempre dispara la descarga
   const enlace = $('pdf-enlace');
-  enlace.href = uri;
+  if (enlace.dataset.url) URL.revokeObjectURL(enlace.dataset.url);
+  enlace.dataset.url = url;
+  enlace.href = url;
   enlace.download = fileName;
   $('pdf-listo').hidden = false;
-
-  const link = document.createElement('a');
-  link.href = uri;
-  link.download = fileName;
-  link.type = 'application/pdf';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  $('pdf-listo').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 async function generarPDF() {
@@ -551,3 +545,8 @@ async function generarPDF() {
 /* ===== Inicio ===== */
 toggleUnidad();
 calcular();
+
+/* Permite instalarla desde Chrome ("Instalar aplicación") y abrirla sin internet */
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}

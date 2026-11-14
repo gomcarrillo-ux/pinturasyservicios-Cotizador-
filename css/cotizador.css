@@ -123,6 +123,7 @@ body::before {
 .listo[hidden] { display: none; }
 .listo-texto { display: flex; flex-direction: column; gap: 2px; font-size: 0.85rem; color: var(--text-muted); }
 .listo-texto strong { color: #ffffff; font-size: 0.95rem; }
+.listo-texto small { font-size: 0.75rem; opacity: 0.8; }
 .btn-descarga {
   background: var(--success-green);
   color: #ffffff;

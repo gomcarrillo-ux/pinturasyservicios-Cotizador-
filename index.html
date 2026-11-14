@@ -8,6 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Cotizador Web - Pinturas y Servicios</title>
 
+  <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="static/icon.png">
   <link rel="apple-touch-icon" href="static/icon.png">
   <link rel="stylesheet" href="css/cotizador.css">
@@ -30,9 +31,10 @@
     <div id="pdf-listo" class="listo" hidden>
       <div class="listo-texto">
         <strong>✅ PDF generado</strong>
-        <span>Si no se descargó solo, toca el botón:</span>
+        <span>Toca el botón para guardarlo.</span>
+        <small>Si tu teléfono lo guarda como «.bin», cámbiale el nombre a «.pdf».</small>
       </div>
-      <a id="pdf-enlace" class="btn-descarga" href="#" download="cotizacion.pdf" type="application/pdf">📥 Descargar PDF</a>
+      <a id="pdf-enlace" class="btn-descarga" href="#" download="cotizacion.pdf">📥 Descargar PDF</a>
     </div>
 
     <div class="main-grid">
