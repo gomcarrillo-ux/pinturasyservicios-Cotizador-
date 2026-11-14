@@ -480,15 +480,25 @@ function construirPdf() {
   return { doc, d };
 }
 
-function entregarPdfEnMovil(pdfBlob, fileName) {
-  const url = URL.createObjectURL(pdfBlob);
+/* En el APK (WebView de Android) un enlace "blob:" llega sin tipo de archivo y se guarda
+   como .bin. Un enlace "data:application/pdf" lleva el tipo dentro, así que se guarda como .pdf. */
+function entregarPdfEnMovil(doc, fileName) {
+  const b64 = doc.output('datauristring').split('base64,')[1];
+  const uri = 'data:application/pdf;base64,' + b64;
+
+  // Botón de respaldo: un toque real del usuario siempre dispara la descarga
+  const enlace = $('pdf-enlace');
+  enlace.href = uri;
+  enlace.download = fileName;
+  $('pdf-listo').hidden = false;
+
   const link = document.createElement('a');
-  link.href = url;
+  link.href = uri;
   link.download = fileName;
+  link.type = 'application/pdf';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 
 async function generarPDF() {
@@ -506,6 +516,7 @@ async function generarPDF() {
   const btn = $('btnGenerarPdf');
   btn.disabled = true;
   btn.innerText = '⏳ GENERANDO...';
+  $('pdf-listo').hidden = true;
 
   try {
     await asegurarJsPDF();
@@ -522,7 +533,7 @@ async function generarPDF() {
         text: `Cotización de Pinturas y Servicios - ${d.clienteRaw}`
       });
     } else if (esMovil) {
-      entregarPdfEnMovil(pdfBlob, d.fileName);
+      entregarPdfEnMovil(doc, d.fileName);
     } else {
       doc.save(d.fileName);
     }

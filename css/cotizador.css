@@ -107,6 +107,33 @@ body::before {
 }
 .aviso[hidden] { display: none; }
 
+/* ---------- PDF listo (respaldo de descarga en celular) ---------- */
+.listo {
+  background: rgba(22, 163, 74, 0.18);
+  border: 1px solid rgba(74, 222, 128, 0.55);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.listo[hidden] { display: none; }
+.listo-texto { display: flex; flex-direction: column; gap: 2px; font-size: 0.85rem; color: var(--text-muted); }
+.listo-texto strong { color: #ffffff; font-size: 0.95rem; }
+.btn-descarga {
+  background: var(--success-green);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 11px 16px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
 /* ---------- Layout ---------- */
 .main-grid {
   display: grid;
