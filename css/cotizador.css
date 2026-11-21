@@ -1,0 +1,342 @@
+:root {
+  --navy: #0b2a55;
+  --navy-deep: #07162e;
+  --panel: rgba(8, 24, 52, 0.80);
+  --accent-blue: #5cc0ff;
+  --brand-blue: #1e5fa8;
+  --brand-red: #e53935;
+  --brand-yellow: #fbc02d;
+  --success-green: #16a34a;
+  --text-muted: #a9bad3;
+  --line: rgba(148, 178, 222, 0.28);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--navy-deep) url('../static/fondo.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #ffffff;
+  min-height: 100vh;
+  padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
+  position: relative;
+}
+
+/* Capa de color sobre la foto de las casas */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 22, 46, 0.55) 0%, rgba(7, 22, 46, 0.80) 45%, rgba(7, 22, 46, 0.92) 100%);
+  z-index: 0;
+}
+
+.app-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ---------- Encabezado ---------- */
+.header {
+  background: linear-gradient(135deg, rgba(11, 42, 85, 0.88), rgba(7, 22, 46, 0.80));
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--brand-red);
+  border-radius: 16px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.header img {
+  width: 76px;
+  height: 66px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+.header-text h1 {
+  font-size: 1.35rem;
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  line-height: 1.15;
+}
+
+.header-text p {
+  font-size: 0.85rem;
+  color: var(--brand-yellow);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.header-badge {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+/* ---------- Aviso (reemplaza alert) ---------- */
+.aviso {
+  background: #fff4e5;
+  color: #7a2e0e;
+  border-left: 5px solid var(--brand-red);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.aviso[hidden] { display: none; }
+
+/* ---------- PDF listo (respaldo de descarga en celular) ---------- */
+.listo {
+  background: rgba(22, 163, 74, 0.18);
+  border: 1px solid rgba(74, 222, 128, 0.55);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.listo[hidden] { display: none; }
+.listo-texto { display: flex; flex-direction: column; gap: 2px; font-size: 0.85rem; color: var(--text-muted); }
+.listo-texto strong { color: #ffffff; font-size: 0.95rem; }
+.listo-texto small { font-size: 0.75rem; opacity: 0.8; }
+.btn-descarga {
+  background: var(--success-green);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 11px 16px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* ---------- Layout ---------- */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .main-grid { grid-template-columns: 1fr 330px; align-items: start; }
+}
+
+.form-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+.section-title {
+  font-size: 0.98rem;
+  color: var(--accent-blue);
+  margin-bottom: 14px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--line);
+  padding: 0 0 6px 10px;
+  border-left: 4px solid var(--brand-yellow);
+  padding-left: 10px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+@media (min-width: 600px) {
+  .form-grid-2 { grid-template-columns: 1fr 1fr; }
+  .form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* 16px evita el zoom automático al enfocar campos en el celular */
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+select { text-overflow: ellipsis; }
+
+input:disabled {
+  background-color: #e2e8f0 !important;
+  color: #64748b !important;
+  cursor: not-allowed;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--brand-yellow);
+  box-shadow: 0 0 0 3px rgba(251, 192, 45, 0.30);
+}
+
+textarea { resize: vertical; min-height: 80px; }
+
+.check-global {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -8px 0 22px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.check-global input {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: var(--brand-yellow);
+}
+
+/* ---------- Resumen financiero ---------- */
+.summary-card {
+  background: linear-gradient(160deg, rgba(11, 42, 85, 0.95), rgba(7, 22, 46, 0.95));
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: fit-content;
+  position: sticky;
+  top: 16px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+}
+
+.summary-title {
+  font-size: 1.05rem;
+  color: var(--accent-blue);
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.summary-muted { color: var(--text-muted); }
+
+.summary-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 14px 0;
+}
+
+.summary-total-label { font-weight: 600; }
+
+.summary-total {
+  font-size: 1.45rem;
+  color: var(--brand-yellow);
+  font-weight: 800;
+  margin-bottom: 22px;
+  word-break: break-word;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #ef4444, #c62828);
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 6px 16px rgba(229, 57, 53, 0.45);
+  transition: transform 0.1s, filter 0.2s;
+}
+
+.btn-submit:active { transform: scale(0.98); }
+.btn-submit:hover { filter: brightness(1.08); }
+
+.btn-submit:disabled {
+  background: #475569;
+  box-shadow: none;
+  cursor: wait;
+}
+
+/* En el celular el resumen queda fijo abajo como barra de total + botón */
+@media (max-width: 899px) {
+  .main-grid { padding-bottom: 8px; }
+
+  .summary-card {
+    position: sticky;
+    top: auto;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    z-index: 5;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+
+  .summary-body { flex: 1; min-width: 0; }
+  .summary-title,
+  .summary-divider { display: none; }
+  .summary-item { margin-bottom: 2px; font-size: 0.8rem; }
+  .summary-total { font-size: 1.2rem; margin-bottom: 0; }
+  .btn-submit { width: auto; padding: 14px 16px; font-size: 0.9rem; white-space: nowrap; }
+}
+
+@media (max-width: 420px) {
+  .header { padding: 12px; gap: 12px; }
+  .header img { width: 62px; height: 54px; }
+  .header-text h1 { font-size: 1.1rem; }
+  .form-panel { padding: 14px; }
+}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b2a55">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Cotizador Web - Pinturas y Servicios</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="static/icon.png">
+  <link rel="apple-touch-icon" href="static/icon.png">
+  <link rel="stylesheet" href="css/cotizador.css">
+</head>
+<body>
+
+  <div class="app-container">
+
+    <header class="header">
+      <img src="static/logo.png" alt="Logo Pinturas y Servicios" id="header-logo">
+      <div class="header-text">
+        <h1>PINTURAS Y SERVICIOS</h1>
+        <p>Calidad &amp; Protección Industrial</p>
+        <span class="header-badge">Generador móvil de cotizaciones PDF</span>
+      </div>
+    </header>
+
+    <div id="aviso" class="aviso" role="alert" hidden></div>
+
+    <div id="pdf-listo" class="listo" hidden>
+      <div class="listo-texto">
+        <strong>✅ PDF generado</strong>
+        <span>Toca el botón para guardarlo.</span>
+        <small>Si tu teléfono lo guarda como «.bin», cámbiale el nombre a «.pdf».</small>
+      </div>
+      <a id="pdf-enlace" class="btn-descarga" href="#" download="cotizacion.pdf">📥 Descargar PDF</a>
+    </div>
+
+    <div class="main-grid">
+      <main class="form-panel">
+
+        <h2 class="section-title">Configuración de Moneda e Impuestos</h2>
+        <div class="form-grid form-grid-3">
+          <div class="form-group">
+            <label for="moneda">Moneda de la Cotización:</label>
+            <select id="moneda" onchange="cambiarMoneda()">
+              <option value="USD">Dólares Americanos ($ USD)</option>
+              <option value="NIO">Córdobas Nicaragüenses (C$ NIO)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="iva_opcion">Aplicación de IVA:</label>
+            <select id="iva_opcion" onchange="cambiarOpcionIva()">
+              <option value="0">Sin IVA (0%)</option>
+              <option value="15" selected>IVA Estándar (15%)</option>
+              <option value="custom">IVA Personalizado (%)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="iva_porcentaje">Porcentaje IVA (%):</label>
+            <input type="number" id="iva_porcentaje" value="15" min="0" max="100" step="any" inputmode="decimal" disabled oninput="calcular()">
+          </div>
+        </div>
+
+        <h2 class="section-title">Datos del Cliente y Proyecto</h2>
+        <div class="form-grid form-grid-2">
+          <div class="form-group">
+            <label for="cliente">Empresa / Cliente:</label>
+            <input type="text" id="cliente" placeholder="Ej: Condominio Las Colinas">
+          </div>
+          <div class="form-group">
+            <label for="contacto">Atención a:</label>
+            <input type="text" id="contacto" placeholder="Ej: Ing. Roberto Mendoza">
+          </div>
+          <div class="form-group">
+            <label for="ubicacion">Ubicación Obra:</label>
+            <input type="text" id="ubicacion" placeholder="Ej: Managua, Nicaragua">
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono / Email:</label>
+            <input type="text" id="telefono" placeholder="Ej: +505 8888-8888">
+          </div>
+        </div>
+
+        <h2 class="section-title">Especificación Técnica del Servicio</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="servicio">Servicio a realizar:</label>
+            <input type="text" id="servicio" maxlength="250" autocomplete="off"
+                   placeholder="Escribe el servicio. Ej: Pintura de fachada y portones">
+          </div>
+        </div>
+
+        <div class="form-grid form-grid-3">
+          <div class="form-group">
+            <label for="unidad_area">Unidad de Medida:</label>
+            <input type="text" id="unidad_area" maxlength="30" autocomplete="off"
+                   placeholder="Ej: m², metros lineales, días" oninput="cambiarUnidad()">
+          </div>
+          <div class="form-group">
+            <label for="area" id="lbl-area">Cantidad / Medida:</label>
+            <input type="number" id="area" placeholder="Ej: 150" min="0" step="any" inputmode="decimal" oninput="calcular()">
+          </div>
+          <div class="form-group">
+            <label for="precio" id="lbl-precio">Precio por unidad ($):</label>
+            <input type="number" id="precio" placeholder="Ej: 12.50" min="0" step="any" inputmode="decimal" oninput="calcular()">
+          </div>
+        </div>
+
+        <label class="check-global" for="cotizacion_global">
+          <input type="checkbox" id="cotizacion_global" onchange="cambiarUnidad()">
+          <span>Cotización global (un solo monto, sin unidad ni cantidad)</span>
+        </label>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="alcance">Alcance Técnico:</label>
+            <textarea id="alcance" placeholder="Descripción detallada de la preparación de superficie y sistema a aplicar..."></textarea>
+          </div>
+        </div>
+
+        <h2 class="section-title">Términos Comerciales</h2>
+        <div class="form-grid form-grid-2">
+          <div class="form-group">
+            <label for="tiempo">Tiempo de Ejecución:</label>
+            <input type="text" id="tiempo" placeholder="Ej: 5 a 7 días hábiles">
+          </div>
+          <div class="form-group">
+            <label for="validez">Validez de la Oferta:</label>
+            <input type="text" id="validez" placeholder="Ej: 15 días calendario">
+          </div>
+        </div>
+
+      </main>
+
+      <aside class="summary-card">
+        <div class="summary-body">
+          <h2 class="summary-title">RESUMEN FINANCIERO</h2>
+          <div class="summary-item">
+            <span>Subtotal:</span>
+            <strong id="lblSubtotal">$ 0.00 USD</strong>
+          </div>
+          <div class="summary-item summary-muted">
+            <span id="lblIvaTexto">IVA (15%):</span>
+            <strong id="lblIva">$ 0.00 USD</strong>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-item">
+            <span class="summary-total-label">TOTAL ESTIMADO</span>
+          </div>
+          <div class="summary-total" id="lblTotal">$ 0.00 USD</div>
+        </div>
+
+        <button class="btn-submit" id="btnGenerarPdf" onclick="generarPDF()">📄 GENERAR PDF</button>
+      </aside>
+    </div>
+  </div>
+
+  <script src="js/logo-data.js"></script>
+  <!-- Opcional: para que el PDF funcione sin internet en el APK, descarga jspdf.umd.min.js (v2.5.1) y ponlo en js/ -->
+  <script src="js/jspdf.umd.min.js"></script>
+  <script src="js/cotizador.js"></script>
+</body>
+</html>
